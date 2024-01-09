@@ -1,30 +1,33 @@
+import { call } from "./service/ApiService"
 import logo from './logo.svg';
 import './App.css';
 import Todo from './Todo';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, List, Paper } from "@mui/material";
 import AddTodo from "./AddTodo";
 
 function App() {
-  const [items, setItems] = useState([]);
+    const [items, setItems] = useState([]);
+
+  useEffect(() => {
+      call("/todo", "GET", null)
+      .then((response) => setItems(response.data));
+  },[]);
 
   const addItem = (item) => {
-    item.id = "ID-" + items.length; // key를 위한 id
-    item.done = false;
-    setItems([...items, item]);
-    console.log("items : ", items);
-  }
+    call("/todo", "POST", item)
+    .then((response) => setItems( response.data ));
+  };
 
   const deleteItem = (item) => {
-    // 삭제할 아이템을 찾는다.
-    const newItems = items.filter(e => e.id != item.id);
-    // 삭제할 아이템을 제외한 아이템을 다시 배열에 저장한다.
-    setItems([...newItems]);
-  }
+    call("/todo", "DELETE", item)
+    .then((response) => setItems( response.data ));
+  };
 
-  const editItem = () => {
-    setItems([...items]);
-  }
+  const editItem = (item) => {
+    call("/todo", "PUT", item)
+    .then((response) => setItems( response.data ));
+  };
 
   let todoItems = items.length > 0 && (
     <Paper style={{ margin: 16 }}>
