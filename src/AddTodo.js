@@ -11,6 +11,7 @@ const AddTodo = (props) => {
     addItem(item);
     setItem({ title: "" });
   };
+  
   // onInputChange 함수 작성
   const onInputChange = (e) => {
     setItem({title: e.target.value});
