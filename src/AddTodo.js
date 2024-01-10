@@ -1,57 +1,58 @@
-import React, { useState } from "react";
-import { Button, Grid, TextField } from "@mui/material";
+import React from "react";
+import { TextField, Paper, Button, Grid } from "@mui/material";
 
-const AddTodo = (props) => {
-  // 사용자의 입력을 저장할 오브젝트
-  const [item, setItem] = useState([{ title: "" }]);
-  const addItem = props.addItem;
-
-  // onButtonClick 함수 작성
-  const onButtonClick = () => {
-    addItem(item);
-    setItem({ title: "" });
-  };
-  
-  // onInputChange 함수 작성
-  const onInputChange = (e) => {
-    setItem({title: e.target.value});
-    console.log(item);
-  };
-
-  // enterKeyEventHandler 함수 작성
-  const enterKeyEventHandler = (e) => {
-    if (e.key === "Enter") {
-      onButtonClick();
-    }
+class AddTodo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { item: { title: "" } };
+    this.add = props.add;
   }
 
+  onInputChange = (e) => {
+    const thisItem = this.state.item;
+    thisItem.title = e.target.value;
+    this.setState({ item: thisItem });
+    console.log(thisItem);
+  };
 
+  onButtonClick = () => {
+    this.add(this.state.item);
+    this.setState({ item: { title: "" } });
+  };
 
+  enterKeyEventHandler = (e) => {
+    if (e.key === "Enter") {
+      this.onButtonClick();
+    }
+  };
 
-  return (
-    <Grid container>
-    <Grid xs={11} md={11} item style={{ paddingRight: 16 }}>
-      <TextField
-        placeholder="Add Todo here"
-        fullWidth
-        onChange={onInputChange}
-        onKeyUp={enterKeyEventHandler}
-        value={item.title}
-      />
-    </Grid>
-    <Grid xs={1} md={1} item>
-      <Button
-        fullWidth
-        style = {{ height: '100%' }}
-        color="secondary"
-        variant="outlined"
-        onClick={onButtonClick}
-      >
-        +
-      </Button>
-    </Grid>
-  </Grid>
-  );
+  render() {
+    return (
+      <Paper style={{ margin: 16, padding: 16 }}>
+        <Grid container>
+          <Grid xs={11} md={11} item style={{ paddingRight: 16 }}>
+            <TextField
+              placeholder="Add Todo here"
+              fullWidth
+              onChange={this.onInputChange}
+              value={this.state.item.title}
+              onKeyPress={this.enterKeyEventHandler}
+            />
+          </Grid>
+          <Grid xs={1} md={1} item>
+            <Button
+              fullWidth
+              color="secondary"
+              variant="outlined"
+              onClick={this.onButtonClick}
+            >
+              +
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+    );
+  }
 }
 
 export default AddTodo;
